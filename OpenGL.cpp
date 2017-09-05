@@ -1,52 +1,52 @@
-#include "stdafx.h"
+
 #include <GL/glut.h>
 
 GLfloat rotate_angle1 = 0.0;
-GLfloat dSize = 0.3; //¡¢∑ΩÃÂ¥Û–°
+GLfloat dSize = 0.3; //Á´ãÊñπ‰ΩìÂ§ßÂ∞è
 void myDisplay(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 	glRotatef(rotate_angle1, -0.3, 0.3, -0.3);
 	glBegin(GL_QUADS);
-	//…œ  
-	glColor3f(0.0, 1.0, 0.0);  //¬Ã
-	glNormal3d(0.0, 0.0, 1.0); //…œ
+	//‰∏ä  
+	glColor3f(0.0, 1.0, 0.0);  //Áªø
+	glNormal3d(0.0, 0.0, 1.0); //‰∏ä
 	glVertex3d(dSize, dSize, dSize);
 	glVertex3d(-dSize, dSize, dSize);
 	glVertex3d(-dSize, -dSize, dSize);
 	glVertex3d(dSize, -dSize, dSize);
-	//œ¬  
-	glColor3f(0.0, 0.0, 1.0);  //¿∂
-	glNormal3d(0.0, 0.0, -1.0);//œ¬
+	//‰∏ã  
+	glColor3f(0.0, 0.0, 1.0);  //Ëìù
+	glNormal3d(0.0, 0.0, -1.0);//‰∏ã
 	glVertex3d(dSize, dSize, -dSize);
 	glVertex3d(-dSize, dSize, -dSize);
 	glVertex3d(-dSize, -dSize, -dSize);
 	glVertex3d(dSize, -dSize, -dSize);
-	//«∞  
-	glColor3f(1.0, 0.0, 0.0); //∫Ï
-	glNormal3d(1.0, 0.0, 0.0);//«∞
+	//Ââç  
+	glColor3f(1.0, 0.0, 0.0); //Á∫¢
+	glNormal3d(1.0, 0.0, 0.0);//Ââç
 	glVertex3d(dSize, dSize, dSize);
 	glVertex3d(dSize, -dSize, dSize);
 	glVertex3d(dSize, -dSize, -dSize);
 	glVertex3d(dSize, dSize, -dSize);
-	//∫Û  
-	glColor3f(0.0, 1.0, 1.0);  //«‡
-	glNormal3d(-1.0, 0.0, 0.0);//∫Û  
+	//Âêé  
+	glColor3f(0.0, 1.0, 1.0);  //Èùí
+	glNormal3d(-1.0, 0.0, 0.0);//Âêé  
 	glVertex3d(-dSize, dSize, dSize);
 	glVertex3d(-dSize, dSize, -dSize);
 	glVertex3d(-dSize, -dSize, -dSize);
 	glVertex3d(-dSize, -dSize, dSize);
-	//◊Û  
-	glColor3f(1.0, 0.0, 1.0);  //∆∑∫Ï
-	glNormal3d(0.0, -1.0, 0.0);//◊Û  
+	//Â∑¶  
+	glColor3f(1.0, 0.0, 1.0);  //ÂìÅÁ∫¢
+	glNormal3d(0.0, -1.0, 0.0);//Â∑¶  
 	glVertex3d(dSize, -dSize, dSize);
 	glVertex3d(dSize, -dSize, -dSize);
 	glVertex3d(-dSize, -dSize, -dSize);
 	glVertex3d(-dSize, -dSize, dSize);
-	//”“   
-	glColor3f(1.0, 1.0, 0.0); //ª∆
-	glNormal3d(0.0, 1.0, 0.0);//”“  
+	//Âè≥   
+	glColor3f(1.0, 1.0, 0.0); //ÈªÑ
+	glNormal3d(0.0, 1.0, 0.0);//Âè≥  
 	glVertex3d(dSize, dSize, dSize);
 	glVertex3d(dSize, dSize, -dSize);
 	glVertex3d(-dSize, dSize, -dSize);
@@ -61,7 +61,7 @@ void myDisplay(void)
 void myIdle(void)
 {
 	myDisplay();
-	Sleep(20);  //ºı¬˝–˝◊™ÀŸ∂»
+	Sleep(20);  //ÂáèÊÖ¢ÊóãËΩ¨ÈÄüÂ∫¶
 }
 
 int main(int argc, char *argv[])
@@ -70,7 +70,7 @@ int main(int argc, char *argv[])
 	glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(400, 400);
-	glutCreateWindow("¡¢∑ΩÃÂ–˝◊™MODEL");
+	glutCreateWindow("Á´ãÊñπ‰ΩìÊóãËΩ¨MODEL");
 	glutDisplayFunc(&myDisplay);
 	glutIdleFunc(&myIdle);
 	glutMainLoop();
