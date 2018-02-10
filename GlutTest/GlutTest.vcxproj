@@ -117,10 +117,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ReadObj.cpp" />
+    <ClCompile Include="RObjFx.cpp" />
     <ClCompile Include="Test.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ReadObj.h" />
+    <ClInclude Include="RObjFx.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

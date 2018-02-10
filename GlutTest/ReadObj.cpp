@@ -1,6 +1,5 @@
 #include"ReadObj.h"
 
-
 //构造
 Objmodel::Objmodel() {
 	v_num = 0;
@@ -23,107 +22,7 @@ Objmodel::~Objmodel() {
 	face_normal.clear();
 }
 
-
-//读取模型数据的相关操作  根据str中 KEY的数量来判断str中存储数据格式
-int findKey(string str, char key) {
-	int value = 0;
-	for (int i = 0; i < str.size(); i++) {
-		if (str[i] == key)
-			value++;
-	}
-	return value;
-}
-//重载
-int findKey(string str, string key) {
-	int value = 0;
-	for (int i = 0; i < str.size()-1; i++) {
-		if (str[i] == key[0] && str[i+1] == key[1]) {
-			value++;
-			i++;
-		}
-	}
-	return value;
-}
-
-//读取模型数据的相关操作  读取f中的索引信息
-void getNum(string str, vector<int> &fv, vector<int> &fo) {
-	int num = 0;
-	int det = 0;
-	vector<int> ff(6);
-	for (int i = 0; i < str.size() && det < 6; i++) {
-		if (str[i] >= '0' && str[i] <= '9')
-			num = num * 10 + str[i] - '0';
-		else {
-			if (num != 0) {
-				ff[det] = num;
-				det++;
-				num = 0;
-			}
-		}
-	}
-	fv[0] = ff[0];	fv[1] = ff[2];	fv[2] = ff[4];
-	fo[0] = ff[1];	fo[1] = ff[3];	fo[2] = ff[5];
-}
-
-//读取模型数据的相关操作  读取f中的索引信息	重载函数
-void getNum(string str, vector<int> &fv, vector<int> &ft, vector<int> &fn) {
-	int num = 0;
-	int det = 0;
-	vector<int >ff(9);
-	for (int i = 0; i < str.size() && det < 9; i++) {
-		if (str[i] >= '0' && str[i] <= '9')
-			num = num * 10 + str[i] - '0';
-		else {
-			if (num != 0) {
-				ff[det] = num;
-				det++;
-				num = 0;
-			}
-		}
-	}
-	fv[0] = ff[0];	fv[1] = ff[3];	fv[2] = ff[6];
-	ft[0] = ff[1];	ft[1] = ff[4];	ft[2] = ff[7];
-	fn[0] = ff[2];	fn[1] = ff[5];	fn[2] = ff[8];
-}
-//排序
-//随机快速排序
-
-void Swap(float *a, int i, int j) {
-	float temp = a[i];
-	a[i] = a[j];
-	a[j] = temp;
-}
-
-int qsort(float *a, int begin, int end) {
-	int i, j, temp;
-	i = begin - 1; j = begin;
-	for (; j < end; j++)
-	{
-		if (a[j] <= a[end - 1])
-			Swap(a, ++i, j);
-	}
-	return i;
-}
-
-void randqsort(float *a, int begin, int n) {
-	while (begin >= n)
-		return;
-	srand((unsigned)time(NULL));
-	int key = (begin + rand() % (n - begin));
-	Swap(a, key, n - 1);
-	int m = qsort(a, begin, n);
-	randqsort(a, begin, m);
-	randqsort(a, m + 1, n);
-}
-
-vector<GLfloat> vectorCross(vector<GLfloat> v1, vector<GLfloat> v2) {
-	vector<GLfloat> result(3);
-	result[0] = v1[1] * v2[2] - v1[2] * v2[1];
-	result[1] = v1[2] * v2[0] - v1[0] * v2[2];
-	result[2] = v1[0] * v2[1] - v1[1] * v2[1];
-	return result;
-}
-
+/*------------------------------------------类函数--------------------------------------------*/
 //计算法向
 void Objmodel::calculateNormal() {
 	vector<vector<GLfloat>> rawNormal(v_num);
@@ -299,23 +198,6 @@ vector<GLfloat> Objmodel::getCenter(/*GLfloat &x,GLfloat &y,GLfloat &z*/) {
 	}
 	x_max /= 10; y_max /= 10; z_max /= 10;
 
-	/*for (int i = 1; i < v_num; i++) {		//这是单独去最大值与最小值来得出包围盒
-	if (x_max < vertex[i][0])
-	x_max = vertex[i][0];
-	if (x_min > vertex[i][0])
-	x_min = vertex[i][0];
-
-	if (y_max < vertex[i][1])
-	y_max = vertex[i][1];
-	if (y_min > vertex[i][1])
-	y_min = vertex[i][1];
-
-	if (z_max < vertex[i][2])
-	z_max = vertex[i][2];
-	if (z_min > vertex[i][2])
-	z_min = vertex[i][2];
-	}*/
-
 	x_center = (x_min + x_max) / 2.0;
 	y_center = (y_min + y_max) / 2.0;
 	z_center = (z_min + z_max) / 2.0;
@@ -347,8 +229,8 @@ vector<GLfloat> Objmodel::getCenter(/*GLfloat &x,GLfloat &y,GLfloat &z*/) {
 
 ////画出模型的包围盒
 void Objmodel::drawBox() {
-	vector<GLfloat > v1 = one0fcatercorner;
-	vector<GLfloat > v2 = other0fcatercorner;
+	vector<GLfloat> v1 = one0fcatercorner;
+	vector<GLfloat> v2 = other0fcatercorner;
 	glColor3f(1.0f, 0.0f, 0.0f);
 	glBegin(GL_LINE_LOOP);
 	glVertex3f(v1[0], v1[1], v1[2]);

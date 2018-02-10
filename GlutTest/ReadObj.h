@@ -1,11 +1,8 @@
-#include <gl/glut.h>
 #include <math.h>
-#include <time.h>
 #include <iostream>
-#include <string>
 #include <fstream>
 #include <sstream>
-#include <vector>
+#include "RObjFx.h"
 
 using namespace std;
 
