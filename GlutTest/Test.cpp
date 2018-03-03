@@ -19,7 +19,7 @@ GLfloat zz = 0.0f;
 //设定读入的模型以及显示的方式
 bool redraw = true;
 Objmodel *obj1 = new Objmodel();
-string path = "obj/rubby.obj";
+string path = "obj/NormalizeModel.obj";
 
 GLint mode1 = GL_LINE;
 GLint mode2 = GL_TRIANGLES;
