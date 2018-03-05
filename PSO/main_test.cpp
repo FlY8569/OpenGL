@@ -43,6 +43,6 @@ int main()
 		std::cout << "x = " << psooptimizer.all_best_position_[0] << ", " << "y = " << psooptimizer.all_best_position_[1];
 		std::cout << ", fitness = " << result[i] << std::endl;
 	}
-	return 0;
 	system("pause");
+	return 0;
 }
