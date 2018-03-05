@@ -46,12 +46,12 @@ class OBJ:
     def create_bbox(self):
         # self.vertices is not None
         ps = np.array(self.vertices)
-        #vmin = ps.min(axis=0)
-        #vmax = ps.max(axis=0)
+        vmin = ps.min(axis=0)
+        vmax = ps.max(axis=0)
         vmean = ps.mean(axis=0)
         self.bbox_center = vmean[:]
         #self.bbox_center = (vmax + vmin) / 2
-        #self.bbox_half_r = np.max(vmax - vmin) / 2
+        self.bbox_half_r = np.max(vmax - vmin) / 2
 
     def create_gl_list(self):
         self.gl_list = glGenLists(1)

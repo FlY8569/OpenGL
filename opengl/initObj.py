@@ -36,31 +36,44 @@ def display():
     obj.create_gl_list()
     visible(obj)
     #缓冲，让下次读入加快
-    with open("./bird.pkl", 'wb') as f:
-        pickle.dump(obj, f)
-    '''
+    #with open("./bird.pkl", 'wb') as f:
+    #    pickle.dump(obj, f)
+
     s = [10 / obj.bbox_half_r] * 3
     glScale(*s)
-    
+    '''
     t = -obj.bbox_center
     glTranslate(*t)
     '''
+
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
-    """
-    gluLookAt(obj.bbox_center[0], obj.bbox_center[1], obj.bbox_center[2]+2.0 ,
+
+    gluLookAt(obj.bbox_center[0], obj.bbox_center[1], 3.0 + obj.bbox_center[2] ,
               obj.bbox_center[0], obj.bbox_center[1], obj.bbox_center[2],
               0, 1, 0)
-    """
-
     glCallList(obj.gl_list)
     pygame.display.flip()
+    clock = pygame.time.Clock()
+    while True:
+        clock.tick(30)
+        for event in pygame.event.get():
+            if event.type in (QUIT, KEYDOWN):
+                sys.exit()
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glLoadIdentity()
+        gluLookAt(obj.bbox_center[0], obj.bbox_center[1], 3.0 + obj.bbox_center[2],
+                  obj.bbox_center[0], obj.bbox_center[1], obj.bbox_center[2],
+                  0, 1, 0)
+        glCallList(obj.gl_list)
+        pygame.display.flip()
 
+
+    '''
     clock = pygame.time.Clock()
     rx, ry = (0, 0)
     tx, ty = (0, 0)
     zpos = 5
     rotate = move = False
-
     while 1:
         clock.tick(30)
         for e in pygame.event.get():
@@ -100,3 +113,6 @@ def display():
         
         glCallList(obj.gl_list)
         pygame.display.flip()
+        '''
+
+
