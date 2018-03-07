@@ -48,8 +48,7 @@ class OBJ:
         ps = np.array(self.vertices)
         vmin = ps.min(axis=0)
         vmax = ps.max(axis=0)
-        vmean = ps.mean(axis=0)
-        self.bbox_center = vmean[:]
+        self.bbox_center = ps.mean(axis=0)
         #self.bbox_center = (vmax + vmin) / 2
         self.bbox_half_r = np.max(vmax - vmin) / 2
 

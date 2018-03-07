@@ -3,7 +3,7 @@ import numpy as np
 
 def visible(obj):
     m = 0
-    vpnormal = np.array([0, 0, obj.bbox_center[2]+3])
+    vpnormal = np.array([0, 3.0, obj.bbox_center[2]+3])
     face = []
     for row in obj.faces:
         face.append(row[0])
