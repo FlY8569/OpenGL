@@ -31,17 +31,20 @@ def initWindow():
 
 
 def display():
-    obj = OBJ("./NormalizeModel.obj", swapyz=False)
+    obj = OBJ("./bird.obj", swapyz=False)
     obj.create_bbox()
     obj.create_gl_list()
-    #visible(obj)
+
+    vponit = [obj.bbox_center[0], obj.bbox_center[1] , obj.bbox_center[2]+20.0]
+    head = [0,0,1]
+    a1 = A1(obj,vponit, head)
+    a1.drawDelaunay()
+
     #缓冲，让下次读入加快
     #with open("./bird.pkl", 'wb') as f:
     #    pickle.dump(obj, f)
 
-    proPoint(obj, obj.bbox_center[0], obj.bbox_center[1] , obj.bbox_center[2]+2.0, 0, 0, 1)
-    #glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) # GL_POINT GL_LINE  GL_FILL
-'''
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) # GL_POINT GL_LINE  GL_FILL
     clock = pygame.time.Clock()
     while True:
         clock.tick(300)
@@ -53,11 +56,10 @@ def display():
         gluLookAt(obj.bbox_center[0], obj.bbox_center[1], obj.bbox_center[2]+1.0,
                   obj.bbox_center[0], obj.bbox_center[1], obj.bbox_center[2],
                   0, 1, 0)
-        #glCallList(obj.gl_list)
-        #glCallList(proPoint(obj, obj.bbox_center[0],  obj.bbox_center[1], obj.bbox_center[2]+1.0))
+        glCallList(obj.gl_list)
         pygame.display.flip()
 
-
+def drawmouse(obj):
     clock = pygame.time.Clock()
     rx, ry = (0, 0)
     tx, ty = (0, 0)
@@ -102,6 +104,5 @@ def display():
         
         glCallList(obj.gl_list)
         pygame.display.flip()
-'''
 
 

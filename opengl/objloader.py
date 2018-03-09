@@ -44,7 +44,6 @@ class OBJ:
                 self.faces.append([face, norms, texcoords])
 
     def create_bbox(self):
-        # self.vertices is not None
         ps = np.array(self.vertices)
         vmin = ps.min(axis=0)
         vmax = ps.max(axis=0)
