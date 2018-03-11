@@ -31,7 +31,7 @@ def initWindow():
 
 
 def display():
-    obj = OBJ("./bird.obj", swapyz=False)
+    obj = OBJ("./NormalizeModel.obj", swapyz=False)
     obj.create_bbox()
     obj.create_gl_list()
 

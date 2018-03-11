@@ -36,11 +36,14 @@ def getlen(simplice,propoint):
     a = propoint[simplice[0]]
     b = propoint[simplice[1]]
     c = propoint[simplice[2]]
-    ab = ((a[0]-b[0])**2+(a[1]-b[1])**2) ** 0.5
-    ac = ((a[0]-c[0])**2+(a[1]-c[1])**2) ** 0.5
-    bc = ((b[0]-c[0])**2+(b[1]-c[1])**2) ** 0.5
+    ab = np.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2)
+    ac = np.sqrt((a[0]-c[0])**2+(a[1]-c[1])**2)
+    bc = np.sqrt((b[0]-c[0])**2+(b[1]-c[1])**2)
     abc = [ab, ac, bc]
-    return max(abc)
+    s = (ab + ac + bc) / 2.0
+    area = np.sqrt(s*(s-ab)*(s-ac)*(s-bc))
+    circum_r = ab*ac*bc/(4.0*area)
+    return circum_r
 class A1:
     def __init__(self, obj, vpoint, head):
         self.obj = obj
@@ -80,20 +83,21 @@ class A1:
         tri = Delaunay(point)
         self.index = tri.simplices.copy()
         newindex = self.concavehull()
+        plt.title("concave hull")
         plt.triplot(point[:, 0], point[:, 1], newindex)
         plt.plot(point[:, 0], point[:, 1], 'o')
         plt.show()
 
     def concavehull(self):
-        zlen = []
+        cirR = []
         newindex = []
         for simplice in self.index:
-            zlen.append(getlen(simplice, self.propoint))
-        arrzlen = np.array(zlen)
-        print(arrzlen)
-        meanzlen = arrzlen.mean(axis=0)
-        for i in range(len(zlen)-1, -1, -1):
-            if(zlen[i] < meanzlen):
+            cirR.append(getlen(simplice, self.propoint))
+        arrcirR = np.array(cirR)
+        print(arrcirR)
+        meanr =arrcirR.mean(axis=0)
+        for i in range(len(cirR)-1, -1, -1):
+            if(cirR[i] < meanr):
                 newindex.append(self.index[i])
         return newindex
 
