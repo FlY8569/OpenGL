@@ -1,10 +1,10 @@
 import sys
 import pygame
-import pickle
 from OpenGL.GLU import *
 from pygame.constants import *
 from opengl.objloader import *
 from opengl.a1 import *
+from opengl.a2 import *
 
 def initWindow():
     pygame.init()
@@ -31,35 +31,38 @@ def initWindow():
 
 
 def display():
-    obj = OBJ("./NormalizeModel.obj", swapyz=False)
+    obj = OBJ("./bird.obj", swapyz=False)
     obj.create_bbox()
     obj.create_gl_list()
-
-    vponit = [obj.bbox_center[0], obj.bbox_center[1] , obj.bbox_center[2]+20.0]
+    obj.getarea()
+    vponit = [obj.bbox_center[0], obj.bbox_center[1] , obj.bbox_center[2]+2.0]
     head = [0,0,1]
-    a1 = A1(obj,vponit, head)
-    a1.drawDelaunay()
-
+    #a1 = A1(obj,vponit, head)
+    #a1.drawDelaunay()
+    #a2 = A2(obj, vponit)
+    #a2.getvisibleface()
+    #a2.get_a2_list()
     #缓冲，让下次读入加快
     #with open("./bird.pkl", 'wb') as f:
     #    pickle.dump(obj, f)
 
     glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) # GL_POINT GL_LINE  GL_FILL
     clock = pygame.time.Clock()
-    while True:
-        clock.tick(300)
-        for event in pygame.event.get():
-            if event.type in (QUIT, KEYDOWN):
-                sys.exit()
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
-        glLoadIdentity()
-        gluLookAt(obj.bbox_center[0], obj.bbox_center[1], obj.bbox_center[2]+1.0,
-                  obj.bbox_center[0], obj.bbox_center[1], obj.bbox_center[2],
-                  0, 1, 0)
-        glCallList(obj.gl_list)
-        pygame.display.flip()
+    #drawmouse(a2.a2_list)
+    # while True:
+    #     clock.tick(300)
+    #     for event in pygame.event.get():
+    #         if event.type in (QUIT, KEYDOWN):
+    #             sys.exit()
+    #     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+    #     glLoadIdentity()
+    #     gluLookAt(obj.bbox_center[0], obj.bbox_center[1], obj.bbox_center[2]+2.0,
+    #               obj.bbox_center[0], obj.bbox_center[1], obj.bbox_center[2],
+    #               0, 1, 0)
+    #     glCallList(a2.a2_list)
+    #     pygame.display.flip()
 
-def drawmouse(obj):
+def drawmouse(list):
     clock = pygame.time.Clock()
     rx, ry = (0, 0)
     tx, ty = (0, 0)
@@ -102,7 +105,7 @@ def drawmouse(obj):
         glRotate(ry / 5, 1, 0, 0)
         glRotate(rx / 5, 0, 0, 1)
         
-        glCallList(obj.gl_list)
+        glCallList(list)
         pygame.display.flip()
 
 

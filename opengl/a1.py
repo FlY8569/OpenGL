@@ -2,6 +2,7 @@ import numpy as np
 from OpenGL.GL import *
 from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
+from shapely.geometry import Polygon
 
 
 def fun(core, prosurface, vx, vy, vz, T):  #计算三维平面转二维平面
@@ -39,7 +40,6 @@ def getlen(simplice,propoint):
     ab = np.sqrt((a[0]-b[0])**2+(a[1]-b[1])**2)
     ac = np.sqrt((a[0]-c[0])**2+(a[1]-c[1])**2)
     bc = np.sqrt((b[0]-c[0])**2+(b[1]-c[1])**2)
-    abc = [ab, ac, bc]
     s = (ab + ac + bc) / 2.0
     area = np.sqrt(s*(s-ab)*(s-ac)*(s-bc))
     circum_r = ab*ac*bc/(4.0*area)
@@ -53,7 +53,7 @@ class A1:
         self.propoint = [] #二维散点坐标
         self.prosurface = np.array(
             [self.vp[0] - self.core[0], self.vp[1] - self.core[1], self.vp[2] - self.core[2]])  # 投影面法向量
-
+        self.area = 0
     def proPoint(self):
         face = []
         for row in self.obj.faces:
@@ -83,6 +83,12 @@ class A1:
         tri = Delaunay(point)
         self.index = tri.simplices.copy()
         newindex = self.concavehull()
+
+        for i in newindex:
+            self.area = self.area + Polygon(point[i]).area
+            print(i)
+        print(self.area)
+
         plt.title("concave hull")
         plt.triplot(point[:, 0], point[:, 1], newindex)
         plt.plot(point[:, 0], point[:, 1], 'o')
@@ -94,8 +100,7 @@ class A1:
         for simplice in self.index:
             cirR.append(getlen(simplice, self.propoint))
         arrcirR = np.array(cirR)
-        print(arrcirR)
-        meanr =arrcirR.mean(axis=0)
+        meanr = arrcirR.mean(axis=0)
         for i in range(len(cirR)-1, -1, -1):
             if(cirR[i] < meanr):
                 newindex.append(self.index[i])

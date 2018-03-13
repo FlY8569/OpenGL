@@ -2,12 +2,21 @@ from OpenGL.GL import *
 import numpy as np
 
 
+def funarea(a, b, c):
+    ab = np.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2)
+    ac = np.sqrt((a[0] - c[0]) ** 2 + (a[1] - c[1]) ** 2 + (a[2] - c[2]) ** 2)
+    bc = np.sqrt((b[0] - c[0]) ** 2 + (b[1] - c[1]) ** 2 + (b[2] - c[2]) ** 2)
+    s = (ab + ac + bc) / 2.0
+    area = np.sqrt(s * (s - ab) * (s - ac) * (s - bc))
+    return area
+
 class OBJ:
     def __init__(self, filename, swapyz=False):
         self.vertices = []
         self.normals = []
         self.texcoords = []
         self.faces = []
+        self.area = 0
 
         for line in open(filename, "r"):
             if line.startswith('#'): continue
@@ -65,3 +74,9 @@ class OBJ:
                 glVertex3fv(self.vertices[vertices[i] - 1])
             glEnd()
         glEndList()
+
+    def getarea(self):
+        for face in self.faces:
+            index = face[0]
+            self.area = self.area + funarea(self.vertices[index[0]-1], self.vertices[index[1]-1], self.vertices[index[2]-1])
+        print(self.area)
