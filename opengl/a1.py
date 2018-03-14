@@ -33,7 +33,7 @@ def gettransform(a, b, c, core, prosurface):    #转置矩阵
                 [0, 0, 0, 1]])
     return T
 
-def getlen(simplice,propoint):
+def getcircum_r(simplice,propoint):
     a = propoint[simplice[0]]
     b = propoint[simplice[1]]
     c = propoint[simplice[2]]
@@ -44,6 +44,7 @@ def getlen(simplice,propoint):
     area = np.sqrt(s*(s-ab)*(s-ac)*(s-bc))
     circum_r = ab*ac*bc/(4.0*area)
     return circum_r
+
 class A1:
     def __init__(self, obj, vpoint, head):
         self.obj = obj
@@ -53,7 +54,11 @@ class A1:
         self.propoint = [] #二维散点坐标
         self.prosurface = np.array(
             [self.vp[0] - self.core[0], self.vp[1] - self.core[1], self.vp[2] - self.core[2]])  # 投影面法向量
+        self.newindex = []
+        self.proPoint()
         self.area = 0
+        self.cir = 0
+
     def proPoint(self):
         face = []
         for row in self.obj.faces:
@@ -78,33 +83,31 @@ class A1:
             self.propoint.append(fun(self.core, self.prosurface, vx3, vy3, vz3, T))
 
     def drawDelaunay(self):
-        self.proPoint()
+
         point = np.array(self.propoint)
         tri = Delaunay(point)
         self.index = tri.simplices.copy()
-        newindex = self.concavehull()
+        self.concavehull()
 
-        for i in newindex:
+        for i in self.newindex:
             self.area = self.area + Polygon(point[i]).area
-            print(i)
+        print("area")
         print(self.area)
 
-        plt.title("concave hull")
-        plt.triplot(point[:, 0], point[:, 1], newindex)
-        plt.plot(point[:, 0], point[:, 1], 'o')
-        plt.show()
+        # plt.title("concave hull")
+        # plt.triplot(point[:, 0], point[:, 1], self.newindex)
+        # plt.plot(point[:, 0], point[:, 1], 'o')
+        # plt.show()
 
     def concavehull(self):
         cirR = []
-        newindex = []
         for simplice in self.index:
-            cirR.append(getlen(simplice, self.propoint))
+            cirR.append(getcircum_r(simplice, self.propoint))
         arrcirR = np.array(cirR)
         meanr = arrcirR.mean(axis=0)
         for i in range(len(cirR)-1, -1, -1):
             if(cirR[i] < meanr):
-                newindex.append(self.index[i])
-        return newindex
+                self.newindex.append(self.index[i])
 
 
     def get_a1_list(self):
@@ -116,3 +119,37 @@ class A1:
             glVertex2fv(self.propoint[i])
         glEnd()
         glEndList()
+
+    def getlenth(self):
+        dirindex = {}
+        lenindex = []
+        for i in self.newindex:
+            i.sort()
+            if (i[0], i[1]) in dirindex.keys():
+                dirindex[(i[0], i[1])] += 1
+            else:
+                dirindex[(i[0], i[1])] = 1
+            if (i[0], i[2]) in dirindex.keys():
+                dirindex[(i[0], i[2])] += 1
+            else:
+                dirindex[(i[0], i[2])] = 1
+            if (i[1], i[2]) in dirindex.keys():
+                dirindex[(i[1], i[2])] += 1
+            else:
+                dirindex[(i[1], i[2])] = 1
+        for key in dirindex:
+            if dirindex[key] == 1:
+                lenindex.append(key)
+                a = self.propoint[key[0]][0] - self.propoint[key[1]][0]
+                b = self.propoint[key[0]][1] - self.propoint[key[1]][1]
+                self.cir += np.sqrt(a ** 2 + b ** 2)
+        print(self.cir)
+        x = []
+        y = []
+        for i in lenindex:
+            x.append([self.propoint[i[0]][0], self.propoint[i[1]][0]])
+            y.append([self.propoint[i[0]][1], self.propoint[i[1]][1]])
+        plt.title("cir")
+        for i in range(len(x)):
+            plt.plot(x[i], y[i], '-', color="black", linewidth=1)
+        plt.show()

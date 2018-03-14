@@ -33,12 +33,13 @@ def initWindow():
 def display():
     obj = OBJ("./bird.obj", swapyz=False)
     obj.create_bbox()
-    obj.create_gl_list()
-    obj.getarea()
+    #obj.create_gl_list()
+    #obj.getarea()
     vponit = [obj.bbox_center[0], obj.bbox_center[1] , obj.bbox_center[2]+2.0]
     head = [0,0,1]
-    #a1 = A1(obj,vponit, head)
-    #a1.drawDelaunay()
+    a1 = A1(obj,vponit, head)
+    a1.drawDelaunay()
+    a1.getlenth()
     #a2 = A2(obj, vponit)
     #a2.getvisibleface()
     #a2.get_a2_list()
