@@ -55,6 +55,7 @@ class A1:
         self.prosurface = np.array(
             [self.vp[0] - self.core[0], self.vp[1] - self.core[1], self.vp[2] - self.core[2]])  # 投影面法向量
         self.newindex = []
+        self.T = 0
         self.proPoint()
         self.area = 0
         self.cir = 0
@@ -64,7 +65,7 @@ class A1:
         for row in self.obj.faces:
             face.append(row[0])
         visVertices = self.obj.vertices[:]
-        T = gettransform(self.head[0], self.head[1], self.head[2], self.core, self.prosurface)
+        self.T = gettransform(self.head[0], self.head[1], self.head[2], self.core, self.prosurface)
         for i in range(len(face)):
             v1index = face[i][0] - 1
             v2index = face[i][1] - 1
@@ -72,15 +73,15 @@ class A1:
             vx1 = visVertices[v1index][0]
             vy1 = visVertices[v1index][1]
             vz1 = visVertices[v1index][2]
-            self.propoint.append(fun(self.core, self.prosurface, vx1, vy1, vz1, T))
+            self.propoint.append(fun(self.core, self.prosurface, vx1, vy1, vz1, self.T))
             vx2 = visVertices[v2index][0]
             vy2 = visVertices[v2index][1]
             vz2 = visVertices[v2index][2]
-            self.propoint.append(fun(self.core, self.prosurface, vx2, vy2, vz2, T))
+            self.propoint.append(fun(self.core, self.prosurface, vx2, vy2, vz2, self.T))
             vx3 = visVertices[v3index][0]
             vy3 = visVertices[v3index][1]
             vz3 = visVertices[v3index][2]
-            self.propoint.append(fun(self.core, self.prosurface, vx3, vy3, vz3, T))
+            self.propoint.append(fun(self.core, self.prosurface, vx3, vy3, vz3, self.T))
 
     def drawDelaunay(self):
 
@@ -91,7 +92,7 @@ class A1:
 
         for i in self.newindex:
             self.area = self.area + Polygon(point[i]).area
-        print("area")
+        print("area ")
         print(self.area)
 
         # plt.title("concave hull")
@@ -106,7 +107,7 @@ class A1:
         arrcirR = np.array(cirR)
         meanr = arrcirR.mean(axis=0)
         for i in range(len(cirR)-1, -1, -1):
-            if(cirR[i] < meanr):
+            if(cirR[i] < meanr * 2):  #参数设置
                 self.newindex.append(self.index[i])
 
 
@@ -143,13 +144,13 @@ class A1:
                 a = self.propoint[key[0]][0] - self.propoint[key[1]][0]
                 b = self.propoint[key[0]][1] - self.propoint[key[1]][1]
                 self.cir += np.sqrt(a ** 2 + b ** 2)
-        print(self.cir)
-        x = []
-        y = []
-        for i in lenindex:
-            x.append([self.propoint[i[0]][0], self.propoint[i[1]][0]])
-            y.append([self.propoint[i[0]][1], self.propoint[i[1]][1]])
-        plt.title("cir")
-        for i in range(len(x)):
-            plt.plot(x[i], y[i], '-', color="black", linewidth=1)
-        plt.show()
+        print("投影周长"+self.cir)
+        # x = []
+        # y = []
+        # for i in lenindex:
+        #     x.append([self.propoint[i[0]][0], self.propoint[i[1]][0]])
+        #     y.append([self.propoint[i[0]][1], self.propoint[i[1]][1]])
+        # plt.title("cir")
+        # for i in range(len(x)):
+        #     plt.plot(x[i], y[i], '-', color="black", linewidth=1)
+        # plt.show()

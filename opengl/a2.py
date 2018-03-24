@@ -84,8 +84,8 @@ class A2:
 
 
     def getvisibleface(self):
-        self.visface = visible(self.obj,self.vp)
-        print(self.visface)
+        self.visface = visible(self.obj, self.vp)
+
 
 
     def get_a2_list(self):
@@ -99,3 +99,4 @@ class A2:
                 glVertex3fv(self.obj.vertices[face[i] - 1])
             glEnd()
         glEndList()
+
