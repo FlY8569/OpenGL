@@ -14,7 +14,7 @@ def fun(core, prosurface, vx, vy, vz, T):  #计算三维平面转二维平面
     old = np.mat([x, y, z, 1])
     new = old * T
     res = new.getA()
-    return [res[0][0], res[0][2]]
+    return [res[0][0], res[0][1]]
 
 
 def gettransform(a, b, c, core, prosurface):    #转置矩阵
@@ -53,7 +53,7 @@ class A1:
         self.head = head  # 头朝向
         self.propoint = [] #二维散点坐标
         self.prosurface = np.array(
-            [self.vp[0] - self.core[0], self.vp[1] - self.core[1], self.vp[2] - self.core[2]])  # 投影面法向量
+            [self.vp[0], self.vp[1], self.vp[2]])  # 投影面法向量
         self.newindex = []
         self.T = 0
         self.proPoint()
@@ -95,10 +95,10 @@ class A1:
         print("area ")
         print(self.area)
 
-        # plt.title("concave hull")
-        # plt.triplot(point[:, 0], point[:, 1], self.newindex)
-        # plt.plot(point[:, 0], point[:, 1], 'o')
-        # plt.show()
+        plt.title("concave hull")
+        plt.triplot(point[:, 0], point[:, 1], self.newindex)
+        plt.plot(point[:, 0], point[:, 1], 'o')
+        plt.show()
 
     def concavehull(self):
         cirR = []
@@ -107,7 +107,7 @@ class A1:
         arrcirR = np.array(cirR)
         meanr = arrcirR.mean(axis=0)
         for i in range(len(cirR)-1, -1, -1):
-            if(cirR[i] < meanr * 2):  #参数设置
+            if(cirR[i] < meanr*2):  #参数设置
                 self.newindex.append(self.index[i])
 
 
@@ -144,7 +144,8 @@ class A1:
                 a = self.propoint[key[0]][0] - self.propoint[key[1]][0]
                 b = self.propoint[key[0]][1] - self.propoint[key[1]][1]
                 self.cir += np.sqrt(a ** 2 + b ** 2)
-        print("投影周长"+self.cir)
+        print("投影周长")
+        print(self.cir)
         # x = []
         # y = []
         # for i in lenindex:

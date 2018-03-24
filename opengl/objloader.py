@@ -25,12 +25,12 @@ class OBJ:
             if values[0] == 'v':
                 v = [float(x) for x in values[1:4]]
                 if swapyz:
-                    v = v[0], v[2], v[1]
+                    v = v[2], v[0], v[1]
                 self.vertices.append(v)
             elif values[0] == 'vn':
                 v = [float(x) for x in values[1:4]]
                 if swapyz:
-                    v = v[0], v[2], v[1]
+                    v = v[2], v[0], v[1]
                 self.normals.append(v)
             elif values[0] == 'vt':
                 v = [float(x) for x in values[1:3]]
@@ -60,6 +60,7 @@ class OBJ:
         #self.bbox_center = (vmax + vmin) / 2
         self.bbox_half_r = np.max(vmax - vmin) / 2
 
+
     def create_gl_list(self):
         self.gl_list = glGenLists(1)
         glNewList(self.gl_list, GL_COMPILE)
@@ -75,7 +76,7 @@ class OBJ:
             glEnd()
         glEndList()
 
-    def getarea(self):
+    def getarea(self):   #总片面面积
         for face in self.faces:
             index = face[0]
             self.area = self.area + funarea(self.vertices[index[0]-1], self.vertices[index[1]-1], self.vertices[index[2]-1])
