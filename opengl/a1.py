@@ -2,7 +2,7 @@ import numpy as np
 from OpenGL.GL import *
 from scipy.spatial import Delaunay
 import matplotlib.pyplot as plt
-from shapely.geometry import Polygon
+#from shapely.geometry import Polygon
 
 
 def fun(vx, vy, vz, T):  #计算三维平面转二维平面
@@ -19,13 +19,13 @@ def fun(vx, vy, vz, T):  #计算三维平面转二维平面
 
 def gettransform(newy, newz):    #转置矩阵
     if (newy[2] * newz[0] - newy[0] * newz[2]) < 0.001:
-        x = 0
+        y = 0
         z = 0
     else:
-        z = (newy[0] * newz[1] - newy[1] * newz[0]) / (newy[2] * newz[0] - newy[0] * newz[2])
-        x = (newy[1] * newz[2] - newy[2] * newz[1]) / (newy[2] * newz[0] - newy[0] * newz[2])
-    mod = np.sqrt(1 + x**2 + z**2)
-    T = np.mat([[x/mod, 1/mod, z/mod, 0],
+        y = (newy[0] * newz[1] - newy[1] * newz[0]) / (newy[2] * newz[0] - newy[0] * newz[2])
+        z = (newy[1] * newz[2] - newy[2] * newz[1]) / (newy[2] * newz[0] - newy[0] * newz[2])
+    mod = np.sqrt(1 + y**2 + z**2)
+    T = np.mat([[1/mod, y/mod, z/mod, 0],
                 [newy[0], newy[1], newy[2], 0],
                 [newz[0], newz[1], newz[2], 0],
                 [0, 0, 0, 1]])
@@ -42,6 +42,14 @@ def getcircum_r(simplice,propoint):
     area = np.sqrt(s*(s-ab)*(s-ac)*(s-bc))
     circum_r = ab*ac*bc/(4.0*area)
     return circum_r
+
+def getarea(a, b, c):
+    ab = np.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
+    ac = np.sqrt((a[0] - c[0]) ** 2 + (a[1] - c[1]) ** 2)
+    bc = np.sqrt((b[0] - c[0]) ** 2 + (b[1] - c[1]) ** 2)
+    s = (ab + ac + bc) / 2.0
+    area = np.sqrt(s * (s - ab) * (s - ac) * (s - bc))
+    return area
 
 class A1:
     def __init__(self, obj, vpoint, head):
@@ -67,7 +75,7 @@ class A1:
         mod = np.sqrt(self.head[0]**2 + self.head[1]**2 + self.head[2]**2)
         self.head /= mod   #y轴
         self.T = gettransform(self.head, self.prosurface)
-
+        print(self.T)
         for i in range(len(face)):
             v1index = face[i][0] - 1
             v2index = face[i][1] - 1
@@ -93,7 +101,7 @@ class A1:
         self.concavehull()
 
         for i in self.newindex:
-            self.area = self.area + Polygon(point[i]).area
+            self.area += getarea(point[i[0]], point[i[1]], point[i[2]])
         print("投影面积")
         print(self.area)
 

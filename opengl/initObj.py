@@ -38,27 +38,28 @@ def display():
     obj.create_gl_list()  #原图像列表
     #obj.getarea()        #总片面面积
     R = obj.bbox_half_r * 3   #视点球半径
-    ja = math.pi * 0.5   # 0 - pai
+    ja = math.pi * 0   # 0 - pai
     jb = math.pi * 0   # 0 - 2pai
-    x = R * math.sin(ja) * math.cos(jb)
-    y = R * math.sin(ja) * math.sin(jb)
-    z = R * math.cos(ja)
+    x = R * math.sin(ja) * math.sin(jb)
+    y = R * math.cos(ja)
+    z = R * math.sin(ja) * math.cos(jb)
+
     vpoint = [x, y, z]        #视点位置
     t = R / math.cos(ja)
-    if abs(z - t) < 0.0001:
-        head = [-1, 0, 0]  #头朝向
+    if abs(y - t) < 0.0001:
+        head = [0, 0, -1]  #头朝向
     else:
-        head = [-x, -y, t - z]
-
+        head = [-x, t - y, -z]
+    print(vpoint)
     a1 = A1(obj, vpoint, head)
     a1.drawDelaunay()
     a1.getlenth()
-    # a1.get_a1_list()
-    # a2 = A2(obj, vpoint)
-    # a2.getvisibleface()
-    # a2.get_a2_list()
-    # a3 = A3(obj, vpoint, a1.area, a1.T, a2.visface)
-    # a3.getshannon()
+    a1.get_a1_list()
+    a2 = A2(obj, vpoint)
+    a2.getvisibleface()
+    a2.get_a2_list()
+    a3 = A3(obj, vpoint, a1.area, a1.T, a2.visface)
+    a3.getshannon()
     #a2.get_a2_list()
     #缓冲，让下次读入加快
     #with open("./bird.pkl", 'wb') as f:

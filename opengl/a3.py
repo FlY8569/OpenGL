@@ -13,10 +13,8 @@ def fun(vx, vy, vz, T):  #计算三维平面转二维平面
     res = new.getA()
     return [res[0][0], res[0][1]]
 
-def getarea(twoD):
-    a = twoD[0]
-    b = twoD[1]
-    c = twoD[2]
+
+def getarea(a, b, c):
     ab = np.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)
     ac = np.sqrt((a[0] - c[0]) ** 2 + (a[1] - c[1]) ** 2)
     bc = np.sqrt((b[0] - c[0]) ** 2 + (b[1] - c[1]) ** 2)
@@ -24,12 +22,13 @@ def getarea(twoD):
     area = np.sqrt(s * (s - ab) * (s - ac) * (s - bc))
     return area
 
+
 class A3:
-    def __init__(self, obj, vpoint, area, T, visface):
+    def __init__(self, obj, vpoint, area, t, visface):
         self.obj = obj
         self.vp = vpoint  # 视点位置
         self.area = area
-        self.T = T
+        self.T = t
         self.visface = visface
         self.p = []  #概率
         self.h = 0  #香农熵
@@ -53,7 +52,7 @@ class A3:
             vy3 = visVertices[v3index][1]
             vz3 = visVertices[v3index][2]
             twoD.append(fun(vx3, vy3, vz3, self.T))
-            currentarea = getarea(twoD)
+            currentarea = getarea(twoD[0], twoD[1], twoD[2])
             self.p.append(currentarea / self.area)
 
         for curp in self.p:
