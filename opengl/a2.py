@@ -86,8 +86,6 @@ class A2:
     def getvisibleface(self):
         self.visface = visible(self.obj, self.vp)
 
-
-
     def get_a2_list(self):
         self.a2_list = glGenLists(1)
         glNewList(self.a2_list, GL_COMPILE)

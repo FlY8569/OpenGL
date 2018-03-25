@@ -2,16 +2,16 @@ import numpy as np
 import math
 
 
-def fun(core, prosurface, vx, vy, vz, T):  #计算三维平面转二维平面
-    vpt = prosurface[0] * prosurface[0] + prosurface[1] * prosurface[1] + prosurface[2] * prosurface[2]
-    t = ((core[0] - vx) * prosurface[0] + (core[1] - vy) * prosurface[1] + (core[2] - vz) * prosurface[2]) / vpt
-    x = vx + prosurface[0] * t
-    y = vy + prosurface[1] * t
-    z = vz + prosurface[2] * t
-    old = np.mat([x, y, z, 1])
+def fun(vx, vy, vz, T):  #计算三维平面转二维平面
+    # vpt = prosurface[0] * prosurface[0] + prosurface[1] * prosurface[1] + prosurface[2] * prosurface[2]
+    # t = ((core[0] - vx) * prosurface[0] + (core[1] - vy) * prosurface[1] + (core[2] - vz) * prosurface[2]) / vpt
+    # x = vx + prosurface[0] * t
+    # y = vy + prosurface[1] * t
+    # z = vz + prosurface[2] * t
+    old = np.mat([vx, vy, vz, 1])
     new = old * T
     res = new.getA()
-    return [res[0][0], res[0][2]]
+    return [res[0][0], res[0][1]]
 
 def getarea(twoD):
     a = twoD[0]
@@ -27,10 +27,7 @@ def getarea(twoD):
 class A3:
     def __init__(self, obj, vpoint, area, T, visface):
         self.obj = obj
-        self.core = obj.bbox_center[:]  # 图形中心
         self.vp = vpoint  # 视点位置
-        self.prosurface = np.array(
-            [self.vp[0] - self.core[0], self.vp[1] - self.core[1], self.vp[2] - self.core[2]])  # 投影面法向量
         self.area = area
         self.T = T
         self.visface = visface
@@ -47,15 +44,15 @@ class A3:
             vx1 = visVertices[v1index][0]
             vy1 = visVertices[v1index][1]
             vz1 = visVertices[v1index][2]
-            twoD.append(fun(self.core, self.prosurface, vx1, vy1, vz1, self.T))
+            twoD.append(fun(vx1, vy1, vz1, self.T))
             vx2 = visVertices[v2index][0]
             vy2 = visVertices[v2index][1]
             vz2 = visVertices[v2index][2]
-            twoD.append(fun(self.core, self.prosurface, vx2, vy2, vz2, self.T))
+            twoD.append(fun(vx2, vy2, vz2, self.T))
             vx3 = visVertices[v3index][0]
             vy3 = visVertices[v3index][1]
             vz3 = visVertices[v3index][2]
-            twoD.append(fun(self.core, self.prosurface, vx3, vy3, vz3, self.T))
+            twoD.append(fun(vx3, vy3, vz3, self.T))
             currentarea = getarea(twoD)
             self.p.append(currentarea / self.area)
 
