@@ -33,20 +33,14 @@ def display():
         obj = OBJ("./rubby.obj", swapyz=False)
 
         R = obj.bbox_half_r * 2  # 视点球半径
-        ja = 0.28228924
-        jb = 4.16099513
+        ja = 1.57
+        jb = 1.57
         #ja = 0.28413614 #兔子 跑出来的一次
         #jb = 3.52772407
         x = R * math.sin(ja) * math.cos(jb)
         y = R * math.sin(ja) * math.sin(jb)
         z = R * math.cos(ja)
-        vpoint = [x, y, z]  # 视点位置
-        t = R / math.cos(ja)
-        if abs(z - t) < 0.0001:
-            head = [-1, 0, 0]  # 头朝向
-        else:
-            head = [-x, -y, t - z]
-        print(vpoint)
+        vpoint = [x, y, z]  # 视点
         obj.create_gl_list()
     #with open("./bird.pkl", 'wb') as f:
     #    pickle.dump(obj, f)

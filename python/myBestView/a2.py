@@ -92,44 +92,19 @@ def visible(obj, vpnormal):
             del face[k]
     return face
 
-def eyeVisible(eye, obj): #眼睛的可见面
+def eyeVisible(obj, visface): #眼睛的可见面
     eyevisface = []
-    #for row in eye.faces:
-    #    face.append(row[0])
-    for eyeface in eye.faces[0]:
-        e1index = eyeface[0] - 1
-        e2index = eyeface[1] - 1
-        e3index = eyeface[2] - 1
-        ex1 = eye.vertices[e1index][0]
-        ey1 = eye.vertices[e1index][1]
-        ez1 = eye.vertices[e1index][2]
-        ex2 = eye.vertices[e2index][0]
-        ey2 = eye.vertices[e2index][1]
-        ez2 = eye.vertices[e2index][2]
-        ex3 = eye.vertices[e3index][0]
-        ey3 = eye.vertices[e3index][1]
-        ez3 = eye.vertices[e3index][2]
-        for objface in obj.faces[0]:
-            o1index = objface[0] - 1
-            ox1 = obj.vertices[o1index][0]
-            oy1 = obj.vertices[o1index][1]
-            oz1 = obj.vertices[o1index][2]
-            if ex1 != ox1 or ey1 != oy1 or ez1 != oz1:
-                continue
-            o2index = objface[1] - 1
-            ox2 = obj.vertices[o2index][0]
-            oy2 = obj.vertices[o2index][1]
-            oz2 = obj.vertices[o2index][2]
-            if ex2 != ox2 or ey2 != oy2 or ez2 != oz2:
-                continue
-            o3index = objface[2] - 1
-            ox3 = obj.vertices[o3index][0]
-            oy3 = obj.vertices[o3index][1]
-            oz3 = obj.vertices[o3index][2]
-            if ex3 != ox3 or ey3 != oy3 or ez3 != oz3:
-                continue
-            eyevisface.append(eyeface)
-            break
+    for eyeface in obj.eye:
+        e1 = eyeface[0]
+        e2 = eyeface[1]
+        e3 = eyeface[2]
+        for objface in visface:
+            v1 = objface[0]
+            v2 = objface[1]
+            v3 = objface[2]
+            if e1 == v1 and e2 == v2 and e3 == v3:
+                eyevisface.append(eyeface)
+                break
     return eyevisface
 
 
@@ -144,9 +119,8 @@ def getarea(a, b, c):
 
 
 class A2:
-    def __init__(self, obj, eye, vpoint):
+    def __init__(self, obj, vpoint):
         self.obj = obj
-        self.eye = eye
         self.core = obj.bbox_center[:]  # 图形中心
         self.vp = vpoint          # 视点位置
         self.visface = None      #所有可见面
@@ -178,10 +152,10 @@ class A2:
         #print(self.surfaceVisibility)
 
     def getEyeVis(self):
-        self.eyevisface = eyeVisible(self.eye, self.obj)
+        self.eyevisface = eyeVisible(self.obj, self.visface)
         for index in self.eyevisface:
-            self.eyevisarea = self.eyevisarea + getarea(self.eye.vertices[index[0] - 1], self.eye.vertices[index[1] - 1],
-                                                  self.eye.vertices[index[2] - 1])
+            self.eyevisarea = self.eyevisarea + getarea(self.obj.vertices[index[0] - 1], self.obj.vertices[index[1] - 1],
+                                                  self.obj.vertices[index[2] - 1])
         self.eyeVisibility = self.eyevisarea / self.visarea
 
 

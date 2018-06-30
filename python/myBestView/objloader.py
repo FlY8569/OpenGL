@@ -16,12 +16,16 @@ class OBJ:
         self.normals = []
         self.texcoords = []
         self.faces = []
+        self.eye = []
         self.area = 0   #总片面面积
 
         for line in open(filename, "r"):
             if line.startswith('#'): continue
             values = line.split()
             if not values: continue
+            if values[0] == 'e':
+                v = [int(x) for x in values[1:4]]
+                self.eye.append(v)
             if values[0] == 'v':
                 v = [float(x) for x in values[1:4]]
                 if swapyz:
@@ -61,7 +65,7 @@ class OBJ:
         vmax = ps.max(axis=0)
         self.bbox_center = ps.mean(axis=0)
         #self.bbox_center = (vmax + vmin) / 2
-        self.bbox_half_r = np.max(vmax - vmin)
+        self.bbox_half_r = np.max(vmax - vmin) / 2
 
 
     def create_gl_list(self):

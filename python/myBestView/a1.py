@@ -64,6 +64,7 @@ class A1:
         self.shan = 0          #熵
         self.getShadowArea()
         self.getlenth()
+        self.getshannon()
 
     def proPoint(self):
         face = []
@@ -175,5 +176,3 @@ class A1:
         for curA in self.Are:
             p = curA/self.area   #概率
             self.shan += - p * math.log(p, 2)
-        print("shang")
-        print(self.shan)

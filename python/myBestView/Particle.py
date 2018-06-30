@@ -1,5 +1,4 @@
 from myBestView.objloader import *
-from myBestView.eyeloader import *
 from myBestView.a1 import *
 from myBestView.a2 import *
 
@@ -22,9 +21,8 @@ class particle:
         self.fitness = np.zeros(self.particle_num)
         #OBJ
         self.obj = OBJ("./rubby.obj", swapyz=False)
-        self.eye = EYE("./rubbyEyes.obj", swapyz=False)
         # 视点球半径
-        self.R = self.obj.bbox_half_r * 3
+        self.R = self.obj.bbox_half_r * 2
 
         # 粒子的角度
         self.angle = np.zeros((self.particle_num, 2))
@@ -52,7 +50,7 @@ class particle:
             #self.angle[i] = [np.random.rand() * self.Xmax[0], np.random.rand() * self.Xmax[1]]
             #self.pbest[i] = self.angle[i].copy()
             self.point[i],self.head[i] = self.getpoint(self.angle[i], self.R)
-            self.fitness[i] = self.calculateFitness(self.obj, self.eye, self.point[i], self.head[i])
+            self.fitness[i] = self.calculateFitness(self.obj, self.point[i], self.head[i])
             self.V[i] = [np.random.rand() * self.Vmax, np.random.rand() * self.Vmax]
         print("初始化完成~")
 
@@ -69,11 +67,11 @@ class particle:
             head = [-x, -y, t - z]
         return vpoint, head
 
-    def calculateFitness(self, obj, eye, point, head):
+    def calculateFitness(self, obj, point, head):
         a1 = A1(obj, point, head)
-        a2 = A2(obj, eye, point)
-        print("面积：", a1.area, "周长：", a1.cir, "距离：", a2.dismin, "可见度：", a2.surfaceVisibility, "眼睛：", a2.eyeVisibility)
-        newFitness = 0.42 * a1.area + 2.6 * a1.cir + 13 * a2.dismin + 15 * a2.surfaceVisibility + 670 * a2.eyeVisibility
+        a2 = A2(obj, point)
+        print("面积：", 2.6*a1.area, "周长：", 0.42*a1.cir, "视点熵：", 1.3*a1.shan,  "距离：", 13*a2.dismin, "可见度：", 15*a2.surfaceVisibility, "眼睛：", 670*a2.eyeVisibility)
+        newFitness = 2.6 * a1.area + 0.42 * a1.cir + 1.3*a1.shan + 13 * a2.dismin + 15 * a2.surfaceVisibility + 670 * a2.eyeVisibility
         return newFitness
 
     #更新gbest_fitness
@@ -105,7 +103,7 @@ class particle:
                 if self.angle[i][j] < 0 or self.angle[i][j] > self.Xmax[j]:
                     self.angle[i][j] = self.Xmax[j] * np.random.rand()
             self.point[i], self.head[i] = self.getpoint(self.angle[i], self.R)
-            newFitness = self.calculateFitness(self.obj, self.eye, self.point[i], self.head[i])
+            newFitness = self.calculateFitness(self.obj, self.point[i], self.head[i])
             if newFitness > self.fitness[i]:
                 self.pbest[i] = self.angle[i].copy()
                 self.fitness[i] = newFitness
