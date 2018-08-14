@@ -52,7 +52,7 @@ class A1:
         self.core = [0, 0, 0]  # 图形中心
         self.head = head       # 头朝向
         self.propoint = []     #二维散点坐标
-        self.prosurface = vpoint
+        self.prosurface = vpoint.copy()
         self.newindex = []
         self.Are = []          #视点熵的上面
         self.T = 0             #转置矩阵
@@ -65,9 +65,7 @@ class A1:
         self.getshannon()
 
     def proPoint(self):
-        face = []
-        for row in self.obj.faces:
-            face.append(row[0])
+        face = self.obj.faces[:]
         visVertices = self.obj.vertices[:]
 
         mod = np.sqrt(self.prosurface[0]**2 + self.prosurface[1]**2 + self.prosurface[2]**2)

@@ -59,20 +59,10 @@ class OBJ:
                 self.texcoords.append(v)
             elif values[0] == 'f':
                 face = []
-                texcoords = []
-                norms = []
                 for v in values[1:]:
                     w = v.split('/')
                     face.append(int(w[0]))
-                    if len(w) >= 2 and len(w[1]) > 0:
-                        texcoords.append(int(w[1]))
-                    else:
-                        texcoords.append(0)
-                    if len(w) >= 3 and len(w[2]) > 0:
-                        norms.append(int(w[2]))
-                    else:
-                        norms.append(0)
-                self.faces.append([face, norms, texcoords])
+                self.faces.append(face)
 
         self.create_bbox()
         self.getarea()
@@ -88,8 +78,7 @@ class OBJ:
 
 
     def getarea(self):   #总片面面积
-        for face in self.faces:
-            index = face[0]
+        for index in self.faces:
             self.area = self.area + getarea(self.vertices[index[0]-1], self.vertices[index[1]-1], self.vertices[index[2]-1])
         #for index in self.eye:
         #    self.eyearea = self.eyearea + getarea(self.vertices[index[0] - 1], self.vertices[index[1] - 1],

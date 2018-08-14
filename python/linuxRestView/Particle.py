@@ -15,7 +15,7 @@ class particle:
         #惯性因子
         self.w = 1.4
         #最大速度
-        self.Vmax = np.pi * 2
+        self.Vmax = np.pi
         #角度范围
         self.Xmax = [np.pi, np.pi * 2]
         #适应值
@@ -72,13 +72,14 @@ class particle:
         a1 = A1(obj, point, head)
         a2 = A2(obj, point)
         fit = [0 for i in range(6)]
-        fit[0] = a1.area / 1000 * 0.42
-        fit[1] = a1.cir / 1000 * 2
+        fit[0] = a1.area / 10000 * 13
+        fit[1] = a1.cir / 10000 * 0.42
         fit[2] = a1.shan /100 * 0.7
-        fit[3] = a2.dismin / 100 * 13
+        fit[3] = a2.dismin / 1000 * 2.5
         fit[4] = a2.surfaceVisibility * 15
         fit[5] = a2.eyeVisibility * 670
         self.f.write("面积：" + str(fit[0]) + "周长：" + str(fit[1]) + "视点熵：" + str(fit[2]) + "距离：" + str(fit[3]) + "可见度：" + str(fit[4]) + "眼睛：" + str(fit[5]) + "\n")
+        print("面积：" + str(fit[0]) + "周长：" + str(fit[1]) + "视点熵：" + str(fit[2]) + "距离：" + str(fit[3]) + "可见度：" + str(fit[4]) + "眼睛：" + str(fit[5]) + "\n")
         newFitness = fit[0] + fit[1] + fit[2] + fit[3] + fit[4] + fit[5]
         return newFitness
 

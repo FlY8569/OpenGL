@@ -18,23 +18,23 @@ def distance(zhongxin, vpoint):  #计算距离
     dis = np.sqrt((zhongxin[0] - vpoint[0]) ** 2 + (zhongxin[1] - vpoint[1]) ** 2 + (zhongxin[2] - vpoint[2]) ** 2)
     return dis
 
-
-def sameside(A, B, C, P):
-    ab = np.array([A[0] - B[0], A[1] - B[1], A[2] - B[2]])
-    ac = np.array([C[0] - A[0], C[1] - A[1], C[2] - A[2]])
-    ap = np.array([P[0] - A[0], P[1] - A[1], P[2] - A[2]])
-    v1 = np.cross(ab, ac)
-    v2 = np.cross(ab, ap)
-    if np.dot(v1, v2) > 0:
-        return True
-    return False
-
+#plucker坐标
+def plucker(a, b):
+    l0 = a[0] * b[1] - b[0] * a[1]
+    l1 = a[0] * b[2] - b[0] * a[2]
+    l2 = a[0] - b[0]
+    l3 = a[1] * b[2] - b[1] * a[2]
+    l4 = a[2] - b[2]
+    l5 = b[1] - a[1]
+    return [l0, l1, l2, l3, l4, l5]
+def sideOp(a, b):
+    res = a[0] * b[4] + a[1] * b[5] + a[2] * b[3] + a[3] * b[2] + a[4 ] * b[0] + a[5] * b[1]
+    return res
 
 def visible(obj, vpnormal):
     m = 0
-    face = []
-    for row in obj.faces:
-        face.append(row[0])
+    face = obj.faces[:]
+    unvisiblevid = []  # 所有可见点的集合
     visVertices = obj.vertices[:]
     for i in range(len(face)):
         v1index = face[m][0] - 1
@@ -58,6 +58,64 @@ def visible(obj, vpnormal):
             del face[m]
             m = m - 1
         m = m + 1
+
+    # for i in face:
+    #     for j in i:
+    #         unvisiblevid.append(j)
+    #
+    # unvisiblev = list(set(unvisiblevid))
+    # cnt = 0
+    # for i in range(len(unvisiblev)-1, -1, -1):
+    #     t = unvisiblev[i] - 1
+    #
+    #     for j in obj.faces:
+    #         v1index = j[0] - 1
+    #         v2index = j[1] - 1
+    #         v3index = j[2] - 1
+    #         if t == v1index or t == v2index or t == v3index:
+    #             continue
+    #         vx1 = visVertices[v1index][0]
+    #         vy1 = visVertices[v1index][1]
+    #         vz1 = visVertices[v1index][2]
+    #         vx2 = visVertices[v2index][0]
+    #         vy2 = visVertices[v2index][1]
+    #         vz2 = visVertices[v2index][2]
+    #         vx3 = visVertices[v3index][0]
+    #         vy3 = visVertices[v3index][1]
+    #         vz3 = visVertices[v3index][2]
+    #         v0 = (vx1, vy1, vz1)
+    #         v1 = (vx2, vy2, vz2)
+    #         v2 = (vx3, vy3, vz3)
+    #         e1 = plucker(v1, v0)
+    #         e2 = plucker(v2, v1)
+    #         e3 = plucker(v0, v2)
+    #         L = plucker(vpnormal, visVertices[t])
+    #         s1 = sideOp(L, e1)
+    #         s2 = sideOp(L, e2)
+    #         s3 = sideOp(L, e3)
+    #         #     print("vpnormal" + str(vpnormal) + "visVertices[t]" + str(visVertices[t]))
+    #         #     print(v0)
+    #         #     print(v1)
+    #         #     print(v2)
+    #         #     print(" s1  " + str(s1) + "  s2  " + str(s2) + "  s3  " + str(s3))
+    #         if (s1 > 0 and s2 > 0 and s3 > 0) or (s1 < 0 and s2 < 0 and s3 < 0):
+    #             L2 = plucker(vpnormal, v0)
+    #             L3 = plucker(v0, visVertices[t])
+    #             L4 = plucker(v1, v2)
+    #             s4 = sideOp(L4, L3)
+    #             s5 = sideOp(L4, L2)
+    #             # print("  s4  " + str(s4) + "  s5  " + str(s5))
+    #
+    #             if s4 * s5 > 0:
+    #                 del unvisiblev[i]
+    #                 cnt = cnt + 1
+    #                 break
+    # isExist = np.in1d(face, unvisiblev)
+    # print("cnt")
+    # print(cnt)
+    # for i in range(len(face)-1, -1, -1):
+    #     if isExist[i*3] == False or isExist[i*3+1] == False or isExist[i*3+2] == False:
+    #         del face[i]
     return face
 
 def eyeVisible(obj, visface): #眼睛的可见面
@@ -90,7 +148,7 @@ class A2:
     def __init__(self, obj, vpoint):
         self.obj = obj
         self.core = obj.bbox_center[:]  # 图形中心
-        self.vp = vpoint          # 视点位置
+        self.vp = vpoint.copy()          # 视点位置
         self.visface = None      #所有可见面
         self.visarea = 0          #所有可见面面积
         self.eyevisface = None   #眼睛的可见面
@@ -127,14 +185,15 @@ class A2:
         self.eyeVisibility = self.eyevisarea / self.visarea
 
 
-    def get_a2_list(self):  # 显示可见面
-        self.a2_list = glGenLists(1)
-        glNewList(self.a2_list, GL_COMPILE)
-        glColor3f(1.0, 1.0, 1.0)
 
-        for face in self.visface:
-            glBegin(GL_POLYGON)
-            for i in range(len(face)):
-                glVertex3fv(self.obj.vertices[face[i] - 1])
-            glEnd()
-        glEndList()
+    # def get_a2_list(self):  # 显示可见面
+    #     self.a2_list = glGenLists(1)
+    #     glNewList(self.a2_list, GL_COMPILE)
+    #     glColor3f(1.0, 1.0, 1.0)
+    #
+    #     for face in self.visface:
+    #         glBegin(GL_POLYGON)
+    #         for i in range(len(face)):
+    #             glVertex3fv(self.obj.vertices[face[i] - 1])
+    #         glEnd()
+    #     glEndList()
