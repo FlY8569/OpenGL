@@ -30,20 +30,18 @@ def initWindow():
     glMatrixMode(GL_MODELVIEW)
 
 def display():
-        obj = OBJ("./rubby.obj", swapyz=False)
+        obj = OBJ("./tea1000e.obj", swapyz=False)
 
-        R = obj.bbox_half_r * 2  # 视点球半径
-        ja = 1.57
-        jb = 1.57
-        #ja = 0.28413614 #兔子 跑出来的一次
-        #jb = 3.52772407
+        R = 1000 * 2  # 视点球半径
+        ja = 0.60868651
+        jb = 2.7665885
+
         x = R * math.sin(ja) * math.cos(jb)
         y = R * math.sin(ja) * math.sin(jb)
         z = R * math.cos(ja)
         vpoint = [x, y, z]  # 视点
+        print(vpoint)
         obj.create_gl_list()
-    #with open("./bird.pkl", 'wb') as f:
-    #    pickle.dump(obj, f)
 
         glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) # GL_POINT GL_LINE  GL_FILL
         clock = pygame.time.Clock()

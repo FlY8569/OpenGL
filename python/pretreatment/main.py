@@ -1,10 +1,10 @@
 from pretreatment.eyeloader import *
 from pretreatment.objloader import *
 
-obj = OBJ("./rubby.obj", swapyz=False)
-eye = EYE("./rubbyEyes.obj", swapyz=False)
+obj = OBJ("./TEA.obj", swapyz=False)
+eye = EYE("./TEAEyes.obj", swapyz=False)
 
-f = open('./rubby.obj', 'a')
+f = open('./TEA2.obj', 'a')
 eyevisface = []
 print(eye.faces)
 #print(obj.faces)
@@ -42,6 +42,7 @@ for eyeface in eye.faces:
             continue
         eyevisface.append(objface)
         break
+print(eyevisface)
 for line in eyevisface:
     f.write("e ")
     for i in line:
